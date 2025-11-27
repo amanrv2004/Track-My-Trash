@@ -1,0 +1,33 @@
+/* Import Bootstrap CSS */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+/* Custom global styles (optional) */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-image: url(./assets/floral_bkg_51_b_beige.jpg);
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('./assets/floral_bkg_51_b_beige.jpg');
+  background-size: cover;
+  background-position: center;
+  filter: blur(6px);
+  transform: scale(1.05); /* prevents cropping */
+  z-index: -1;
+}

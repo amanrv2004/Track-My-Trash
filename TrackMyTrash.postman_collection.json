@@ -1,0 +1,644 @@
+{
+  "info": {
+    "_postman_id": "YOUR_POSTMAN_COLLECTION_ID",
+    "name": "Track My Trash - Smart Waste Management System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_collection_id": "YOUR_POSTMAN_COLLECTION_ID"
+  },
+  "item": [
+    {
+      "name": "User Authentication",
+      "item": [
+        {
+          "name": "Register Resident",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Test Resident\",\n    \"email\": \"testresident@example.com\",\n    \"password\": \"password123\",\n    \"houseNo\": \"123\",\n    \"block\": \"C\",\n    \"sector\": \"Sector 5\",\n    \"location\": {\n        \"type\": \"Point\",\n        \"coordinates\": [-73.935242, 40.730610] 
+    }
+}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/users/register/resident",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "register",
+                "resident"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"admin@trackmytrash.com\",\n    \"password\": \"adminpassword\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/users/login",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin Operations",
+      "item": [
+        {
+          "name": "Register Driver (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Test Driver\",\n    \"email\": \"testdriver@example.com\",\n    \"password\": \"password123\",\n    \"vehicleNumber\": \"DRV789\",\n    \"phone\": \"987-654-3210\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/users/register/driver",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "register",
+                "driver"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Users (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/admin/users",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Assign Driver to House (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"houseId\": \"<HOUSE_ID_HERE>\",\n    \"driverId\": \"<DRIVER_ID_HERE>\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/admin/assign-driver",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "assign-driver"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Houses (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/houses",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "houses"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Complaints (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/complaints",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "complaints"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Complaint Status (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"resolved\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/complaints/:id",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "complaints",
+                ":id"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Emergency Requests (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/emergency-requests",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "emergency-requests"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Emergency Request Status (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"assigned\",\n    \"assignedDriver\": \"<DRIVER_ID_HERE>\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/emergency-requests/:id",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "emergency-requests",
+                ":id"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Driver Operations",
+      "item": [
+        {
+          "name": "Update Driver Location",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{DRIVER_TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"latitude\": 40.7128,\n    \"longitude\": -74.0060\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/driver/location",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "driver",
+                "location"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Driver Route",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{DRIVER_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/driver/route",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "driver",
+                "route"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mark Pickup Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{DRIVER_TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"Picked\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/driver/pickup/:houseId",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "driver",
+                "pickup",
+                ":houseId"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Resident Operations",
+      "item": [
+        {
+          "name": "Get Assigned Driver",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{RESIDENT_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/resident/driver",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "resident",
+                "driver"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Confirm Pickup",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{RESIDENT_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/resident/pickup/confirm",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "resident",
+                "pickup",
+                "confirm"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "File Complaint",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{RESIDENT_TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"subject\": \"Missed Pickup\",\n    \"description\": \"Driver did not pick up trash on scheduled day.\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/resident/complaint",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "resident",
+                "complaint"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Submit Emergency Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{RESIDENT_TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"reason\": \"Party, extra garbage\",\n    \"preferredTime\": \"ASAP\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/resident/emergency-request",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "resident",
+                "emergency-request"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Resident Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{RESIDENT_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/resident/profile",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "resident",
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Resident Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{RESIDENT_TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Jane M. Resident\",\n    \"houseNo\": \"123A\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/resident/profile",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "resident",
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Payment Operations",
+      "item": [
+        {
+          "name": "Create Checkout Session",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{RESIDENT_TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"plan\": \"monthly\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/payments/create-checkout-session",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "payments",
+                "create-checkout-session"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "BASE_URL",
+      "value": "http://localhost:5000"
+    },
+    {
+      "key": "ADMIN_TOKEN",
+      "value": ""
+    },
+    {
+      "key": "DRIVER_TOKEN",
+      "value": ""
+    },
+    {
+      "key": "RESIDENT_TOKEN",
+      "value": ""
+    }
+  ]
+}
