@@ -222,43 +222,7 @@ const AdminDashboard = () => {
             </Card.Body>
           </Card>
 
-          {/* Emergency Pickup Requests */}
-          <Card className="mb-4">
-            <Card.Header>Emergency Pickup Requests</Card.Header>
-            <Card.Body>
-              <Table striped bordered hover responsive>
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Resident</th>
-                    <th>Reason</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {emergencyRequests.map(er => (
-                    <tr key={er._id}>
-                      <td>{er._id}</td>
-                      <td>{er.resident?.name}</td>
-                      <td>{er.reason}</td>
-                      <td>{er.status}</td>
-                      <td>
-                        {er.status === 'pending' && (
-                          <Form.Control as="select" onChange={(e) => handleEmergencyRequestStatus(er._id, 'assigned', e.target.value)} className="me-2">
-                            <option value="">Assign Driver</option>
-                            {/* The drivers state is not available in this simplified dashboard, it will be fetched in AssignDriverToHousePage */}
-                          </Form.Control>
-                        )}
-                        <Button variant="success" size="sm" onClick={() => handleEmergencyRequestStatus(er._id, 'resolved')}>Resolve</Button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
-            </Card.Body>
-          </Card>
-
+         
           {/* Live Tracking Map */}
           <Card className="mb-4">
             <Card.Header>Live Tracking Map</Card.Header>
@@ -343,15 +307,53 @@ const AdminDashboard = () => {
               )}
             </Card.Body>
           </Card>
-
-          <Card className="mb-4">
-            <Card.Header>User Management</Card.Header>
-            <Card.Body><Button variant="secondary" onClick={() => navigate('/admin/user-management')}>Manage Users</Button></Card.Body>
-          </Card>
           <Card className="mb-4">
             <Card.Header>Assign Driver to House</Card.Header>
             <Card.Body><Button variant="secondary" onClick={() => navigate('/admin/assign-driver-to-house')}>Assign Drivers</Button></Card.Body>
           </Card>
+          
+          <Card className="mb-4">
+            <Card.Header>User Management</Card.Header>
+            <Card.Body><Button variant="secondary" onClick={() => navigate('/admin/user-management')}>Manage Users</Button></Card.Body>
+          </Card>
+          
+           {/* Emergency Pickup Requests */}
+          <Card className="mb-4">
+            <Card.Header>Emergency Pickup Requests</Card.Header>
+            <Card.Body>
+              <Table striped bordered hover responsive>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Resident</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {emergencyRequests.map(er => (
+                    <tr key={er._id}>
+                      <td>{er._id}</td>
+                      <td>{er.resident?.name}</td>
+                      <td>{er.reason}</td>
+                      <td>{er.status}</td>
+                      <td>
+                        {er.status === 'pending' && (
+                          <Form.Control as="select" onChange={(e) => handleEmergencyRequestStatus(er._id, 'assigned', e.target.value)} className="me-2">
+                            <option value="">Assign Driver</option>
+                            {/* The drivers state is not available in this simplified dashboard, it will be fetched in AssignDriverToHousePage */}
+                          </Form.Control>
+                        )}
+                        <Button variant="success" size="sm" onClick={() => handleEmergencyRequestStatus(er._id, 'resolved')}>Resolve</Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </Card.Body>
+          </Card>
+
 
           {/* Other Admin Sections (Placeholders) */}
           <Card className="mb-4">
