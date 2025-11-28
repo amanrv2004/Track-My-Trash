@@ -57,7 +57,7 @@ const updateLocation = async (req, res) => {
 
   // Proximity Notification Logic
   const driverCoords = [longitude, latitude];
-  const proximityThreshold = 500; // meters
+  const notificationThresholds = [500, 450, 400, 350, 300, 250, 200, 150, 100, 50, 25, 20, 10, 5];
 
   // Initialize proximityNotifications if it doesn't exist
   if (!req.app.locals.proximityNotifications) {
@@ -65,55 +65,53 @@ const updateLocation = async (req, res) => {
   }
 
   try {
-    // Find houses within 500m radius (MongoDB geospatial query)
-    const nearbyHouses = await House.find({
-      assignedDriver: driverId,
-      location: {
-        $nearSphere: {
-          $geometry: {
-            type: "Point",
-            coordinates: driverCoords
-          },
-          $maxDistance: proximityThreshold // 500 meters
-        }
-      }
-    }).populate('resident');
+    // Find houses assigned to the driver
+    const assignedHouses = await House.find({ assignedDriver: driverId }).populate('resident');
 
-    for (const house of nearbyHouses) {
+    for (const house of assignedHouses) {
       if (!house.resident || !house.location || !house.location.coordinates) {
         continue;
       }
 
       const residentId = house.resident._id.toString();
       const residentHouseNo = house.houseNo;
+      const houseCoords = house.location.coordinates; // [longitude, latitude]
       
-      const notificationKey = `${driverId}-${residentId}`;
-      let alreadyNotified = req.app.locals.proximityNotifications[notificationKey];
+      // getDistanceFromLatLonInKm expects (lat1, lon1, lat2, lon2)
+      const distance = getDistanceFromLatLonInKm(driverCoords[1], driverCoords[0], houseCoords[1], houseCoords[0]);
 
-      if (!alreadyNotified) {
-        const message = `${driverName} is near your house (${residentHouseNo}).`;
+      const notificationKey = `${driverId}-${residentId}`;
+      let lastNotifiedDistance = req.app.locals.proximityNotifications[notificationKey] || Infinity;
+
+      // Reset notification state if driver is outside the largest radius
+      if (distance > notificationThresholds[0]) {
+        if (lastNotifiedDistance !== Infinity) {
+            req.app.locals.proximityNotifications[notificationKey] = Infinity;
+        }
+        continue; // Skip to the next house
+      }
+
+      // Find the next notification threshold that has been crossed
+      let thresholdToNotify = null;
+      for (const threshold of notificationThresholds) {
+        if (distance <= threshold && lastNotifiedDistance > threshold) {
+          thresholdToNotify = threshold;
+          break; // Found the closest new threshold crossed
+        }
+      }
+      
+      if (thresholdToNotify) {
+        const message = `${driverName} is approximately ${thresholdToNotify} meters away from your house (${residentHouseNo}).`;
         
         req.io.to(residentId).emit('proximityAlert', {
           message,
           driverId,
+          distance: thresholdToNotify,
           timestamp: new Date(),
         });
-        req.app.locals.proximityNotifications[notificationKey] = true;
+        // Store the threshold that was just notified for
+        req.app.locals.proximityNotifications[notificationKey] = thresholdToNotify;
       }
-    }
-    
-    // Bonus: Reset notification status for houses that are no longer nearby
-    const nearbyHouseIds = nearbyHouses.map(h => h._id.toString());
-    for (const key in req.app.locals.proximityNotifications) {
-        if (req.app.locals.proximityNotifications.hasOwnProperty(key)) {
-            const [dId, rId] = key.split('-');
-            if (dId === driverId.toString()) {
-                const house = await House.findOne({resident: rId});
-                if(house && !nearbyHouseIds.includes(house._id.toString())){
-                    req.app.locals.proximityNotifications[key] = false;
-                }
-            }
-        }
     }
 
   } catch (error) {
@@ -181,30 +179,13 @@ const markPickupStatus = async (req, res) => {
     const route = await Route.findOne({
         driver: driverId,
         date: { $gte: today },
-    }).populate({
-        path: 'houses.house',
-        populate: {
-            path: 'resident',
-            select: '_id' // Only populate the _id, as that's all we need for the socket emission
-        }
-    });
+    }).populate('houses.house');
 
     if (!route) {
         return res.status(404).json({ message: 'No active route found for driver today.' });
     }
 
     const houseEntry = route.houses.find(h => h.house._id.toString() === houseId);
-
-    console.log('--- Debugging markPickupStatus ---');
-    console.log('Driver ID:', driverId);
-    console.log('House ID:', houseId);
-    console.log('Route (after populate):', route);
-    console.log('Found houseEntry:', houseEntry);
-    if (houseEntry) {
-        console.log('houseEntry.house:', houseEntry.house);
-        console.log('houseEntry.house.resident:', houseEntry.house.resident);
-    }
-    console.log('---------------------------------');
 
     if (houseEntry) {
         houseEntry.pickupStatus = status;
@@ -213,12 +194,12 @@ const markPickupStatus = async (req, res) => {
         console.log(`Driver ${req.user.name} marked house ${houseId} as ${status}`);
         
         // Notify resident via Socket.io
-        if (houseEntry.house.resident && houseEntry.house.resident._id) { // Added _id check
-          req.io.to(houseEntry.house.resident._id.toString()).emit('pickupStatus', { 
+        if (houseEntry.house.resident) {
+          req.io.to(houseEntry.house.resident.toString()).emit('pickupStatus', { 
             houseId, 
             status, 
             driverId: req.user._id, 
-            residentId: houseEntry.house.resident._id.toString() // Ensure _id is used here too
+            residentId: houseEntry.house.resident.toString() 
           });
         }
         req.io.to('admin').emit('pickupStatus', { houseId, status, driverId: req.user._id });
@@ -235,7 +216,6 @@ const markPickupStatus = async (req, res) => {
 const stopSharingLocation = async (req, res) => {
   const driverId = req.user._id;
   await User.findByIdAndUpdate(driverId, { isSharingLocation: false });
-  req.io.to('admin').emit('driverStoppedLocation', { driverId }); // Emit to admin room
   res.status(200).json({ message: 'Location sharing stopped successfully' });
 };
 
