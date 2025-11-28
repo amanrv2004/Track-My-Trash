@@ -371,24 +371,7 @@ const ResidentDashboard = () => {
                   }
 
 
-                  return (
-                    <Card className="mb-4">
-            <Card.Header>Notifications</Card.Header>
-            <Card.Body>
-              {notifications.length > 0 ? (
-                <ListGroup variant="flush">
-                  {notifications.map((notification, index) => (
-                    <ListGroup.Item key={index}>
-                      {notification.message}
-                    </ListGroup.Item>
-                  ))}
-                </ListGroup>
-              ) : (
-                <Alert variant="info">No new notifications.</Alert>
-              )}
-            </Card.Body>
-          </Card>
-                    
+                  return (    
                     <MapComponent
                       center={initialMapCenter || [0,0]} // Use fixed initial map center
                       zoom={initialMapZoom || 5} // Use fixed initial map zoom
@@ -515,6 +498,23 @@ const ResidentDashboard = () => {
         </Col>
 
         <Col md={4}>
+          <Card className="mb-4">
+            <Card.Header>Notifications</Card.Header>
+            <Card.Body>
+              {notifications.length > 0 ? (
+                <ListGroup variant="flush">
+                  {notifications.map((notification, index) => (
+                    <ListGroup.Item key={index}>
+                      {notification.message}
+                    </ListGroup.Item>
+                  ))}
+                </ListGroup>
+              ) : (
+                <Alert variant="info">No new notifications.</Alert>
+              )}
+            </Card.Body>
+          </Card>
+          
           {/* Driver Details */}
           <Card className="mb-4">
             <Card.Header>Your Assigned Driver</Card.Header>
@@ -530,9 +530,6 @@ const ResidentDashboard = () => {
               )}
             </Card.Body>
           </Card>
-
-          
-
           {/* Resident Profile */}
           <Card className="mb-4">
             <Card.Header>My Profile</Card.Header>
