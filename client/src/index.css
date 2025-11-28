@@ -12,6 +12,21 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-image: url(./assets/floral_bkg_51_b_beige.jpg);
 }
+.custom-footer {
+  position: static;
+  width: 100%;
+}
+
+/* Desktop & bigger (≥768px) = fixed bottom */
+@media (min-width: 768px) {
+  .custom-footer {
+    position: static;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1030; /* same as Bootstrap navbar */
+  }
+}
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
