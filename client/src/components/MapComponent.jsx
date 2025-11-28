@@ -77,7 +77,7 @@ const MapComponent = ({ center, zoom, markers }) => {
   return (
     <MapContainer center={center} zoom={zoom} scrollWheelZoom={false} style={{ height: '100%', width: '100%' }} ref={mapRef}>
       <TileLayer
-        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        attribution='Track My Trash'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {markers && markers.map((marker, index) => (
