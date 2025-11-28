@@ -186,34 +186,35 @@ const AdminDashboard = () => {
           <h2>Admin Dashboard</h2>
           {message && <Alert variant="success">{message}</Alert>}
           {error && <Alert variant="danger">{error}</Alert>}
-
-          {/* Complaint Management */}
+          {/* Emergency Pickup Requests */}
           <Card className="mb-4">
-            <Card.Header>Complaint Management</Card.Header>
+            <Card.Header>Emergency Pickup Requests</Card.Header>
             <Card.Body>
               <Table striped bordered hover responsive>
                 <thead>
                   <tr>
                     <th>ID</th>
                     <th>Resident</th>
-                    <th>Subject</th>
+                    <th>Reason</th>
                     <th>Status</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {complaints.map(c => (
-                    <tr key={c._id}>
-                      <td>{c._id}</td>
-                      <td>{c.resident?.name}</td>
-                      <td>{c.subject}</td>
-                      <td>{c.status}</td>
+                  {emergencyRequests.map(er => (
+                    <tr key={er._id}>
+                      <td>{er._id}</td>
+                      <td>{er.resident?.name}</td>
+                      <td>{er.reason}</td>
+                      <td>{er.status}</td>
                       <td>
-                        <Form.Control as="select" value={c.status} onChange={(e) => handleComplaintStatusChange(c._id, e.target.value)}>
-                          <option value="pending">Pending</option>
-                          <option value="in_progress">In Progress</option>
-                          <option value="resolved">Resolved</option>
-                        </Form.Control>
+                        {er.status === 'pending' && (
+                          <Form.Control as="select" onChange={(e) => handleEmergencyRequestStatus(er._id, 'assigned', e.target.value)} className="me-2">
+                            <option value="">Assign Driver</option>
+                            {/* The drivers state is not available in this simplified dashboard, it will be fetched in AssignDriverToHousePage */}
+                          </Form.Control>
+                        )}
+                        <Button variant="success" size="sm" onClick={() => handleEmergencyRequestStatus(er._id, 'resolved')}>Resolve</Button>
                       </td>
                     </tr>
                   ))}
@@ -221,6 +222,8 @@ const AdminDashboard = () => {
               </Table>
             </Card.Body>
           </Card>
+
+         
 
          
           {/* Live Tracking Map */}
@@ -316,36 +319,33 @@ const AdminDashboard = () => {
             <Card.Header>User Management</Card.Header>
             <Card.Body><Button variant="secondary" onClick={() => navigate('/admin/user-management')}>Manage Users</Button></Card.Body>
           </Card>
-          
-           {/* Emergency Pickup Requests */}
+           {/* Complaint Management */}
           <Card className="mb-4">
-            <Card.Header>Emergency Pickup Requests</Card.Header>
+            <Card.Header>Complaint Management</Card.Header>
             <Card.Body>
               <Table striped bordered hover responsive>
                 <thead>
                   <tr>
                     <th>ID</th>
                     <th>Resident</th>
-                    <th>Reason</th>
+                    <th>Subject</th>
                     <th>Status</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {emergencyRequests.map(er => (
-                    <tr key={er._id}>
-                      <td>{er._id}</td>
-                      <td>{er.resident?.name}</td>
-                      <td>{er.reason}</td>
-                      <td>{er.status}</td>
+                  {complaints.map(c => (
+                    <tr key={c._id}>
+                      <td>{c._id}</td>
+                      <td>{c.resident?.name}</td>
+                      <td>{c.subject}</td>
+                      <td>{c.status}</td>
                       <td>
-                        {er.status === 'pending' && (
-                          <Form.Control as="select" onChange={(e) => handleEmergencyRequestStatus(er._id, 'assigned', e.target.value)} className="me-2">
-                            <option value="">Assign Driver</option>
-                            {/* The drivers state is not available in this simplified dashboard, it will be fetched in AssignDriverToHousePage */}
-                          </Form.Control>
-                        )}
-                        <Button variant="success" size="sm" onClick={() => handleEmergencyRequestStatus(er._id, 'resolved')}>Resolve</Button>
+                        <Form.Control as="select" value={c.status} onChange={(e) => handleComplaintStatusChange(c._id, e.target.value)}>
+                          <option value="pending">Pending</option>
+                          <option value="in_progress">In Progress</option>
+                          <option value="resolved">Resolved</option>
+                        </Form.Control>
                       </td>
                     </tr>
                   ))}
@@ -353,7 +353,7 @@ const AdminDashboard = () => {
               </Table>
             </Card.Body>
           </Card>
-
+           
 
           {/* Other Admin Sections (Placeholders) */}
           <Card className="mb-4">
