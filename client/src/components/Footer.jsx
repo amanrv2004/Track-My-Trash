@@ -9,9 +9,6 @@ const Footer = () => {
           <Col className="text-center">
             <p>&copy; {new Date().getFullYear()} Track My Trash. All rights reserved.</p>
           </Col>
-          <Col className='text-center'>
-            <p>Follow Us on : Instrgram  Facebook  X</p>
-          </Col>
         </Row>
       </Container>
     </footer>
