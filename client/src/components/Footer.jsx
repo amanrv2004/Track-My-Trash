@@ -3,7 +3,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 
 const Footer = () => {
   return (
-    <footer className="bg-dark text-white py-4 mt-auto fixed-bottom">
+    <footer className="bg-dark text-white py-3 mt-auto custom-footer">
       <Container>
         <Row>
           <Col className="text-center">
