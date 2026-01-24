@@ -8,6 +8,8 @@ const Footer = () => {
         <Row>
           <Col className="text-center">
             <p>&copy; {new Date().getFullYear()} Track My Trash. All rights reserved.</p>
+            </br>
+          <p>Aman Raj Verma </p>
           </Col>
         </Row>
       </Container>
